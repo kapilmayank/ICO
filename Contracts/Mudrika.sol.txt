@@ -1,0 +1,74 @@
+pragma solidity ^0.4.0;
+
+import "browser/Safemath.sol";
+
+contract Mudrika{
+    using SafeMath for uint;
+    string constant public  name = "Mudrika";
+    string constant public symbol = "MDK";
+    
+    uint constant public  decimals = 18;
+    uint constant public _totalSupply = 1000;
+    
+    mapping(address => uint) balances;
+    
+    mapping(address =>mapping(address => uint)) allowed;
+    
+    event Transfer(address  indexed from, address indexed to, uint tokens);
+	event Approval(address  indexed owner, address  indexed spender, uint tokens);
+
+    function totalSupply() public pure returns (uint){
+			return _totalSupply;
+	}
+	
+	function balanceOf(address owner) public constant returns (uint balance){
+		    balances[msg.sender];
+	}
+
+	function Mudrika() public {
+			balances[msg.sender]=_totalSupply;
+    }
+	
+	function allowance(address _owner, address _spender) public view returns (uint remaining){
+			return allowed[_owner][_spender];
+
+	}
+	
+
+
+    
+
+    //This method is called when the owner of the token is directly transferring the coin to the sender
+	function transfer(address _to, uint _value) public returns (bool success){
+			require(balances[msg.sender]<_value && _value==0);
+			balances[msg.sender] = balances[msg.sender].sub(_value);//to prevent the overflow of integer
+			balances[_to] = balances[_to].add(_value);
+			Transfer(msg.sender, _to,_value);
+			return true;
+    }
+
+
+   //This is function is used when a delegate on behalf of the owner(msg.sender) of the token is transferring coins
+	function transferFrom(address _from, address _to, uint _value) public returns (bool success){
+	        require(balances[_from]<_value && _value==0) ;
+			balances[_from] = balances[_from].sub(_value);//to prevent the overflow of integer
+			allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
+			balances[_to] = balances[_to].add(_value);
+
+			Transfer(_from, _to,_value);
+			return true;
+	}
+
+
+	function approve(address _spender, uint _value) public returns (bool success){
+	        allowed[msg.sender][_spender] = _value;
+    		Approval(msg.sender, _spender, _value);
+    		return true;
+	}
+
+
+	
+
+
+	
+	}
